@@ -1,0 +1,64 @@
+DEPLOY THE STATION HEALTH BOARD TO skdla.vercel.app
+====================================================
+
+You should now have a folder named "skdla-vercel-deploy" containing:
+  - index.html      (the Station Health board, copied from StationHealth_AOX.html)
+  - vercel.json     (caching + security headers)
+  - DEPLOY.txt      (this file)
+
+Pick ONE of the deploy paths below.
+
+------------------------------------------------------------------
+OPTION A — DRAG-AND-DROP (easiest, no command line)
+------------------------------------------------------------------
+1. Open https://vercel.com/dashboard
+2. Click on the project named "skdla" (the one mapped to skdla.vercel.app)
+3. Click the "Deployments" tab
+4. Click the "..." menu at the top right → "Create Deployment" → "Upload"
+   (If you don't see Upload, use Option B instead.)
+5. Drag this entire skdla-vercel-deploy folder into the upload box
+6. Click "Deploy"
+7. Wait ~30 seconds. Once green, visit https://skdla.vercel.app
+
+------------------------------------------------------------------
+OPTION B — VERCEL CLI (most reliable; one-time setup)
+------------------------------------------------------------------
+One-time setup:
+  npm i -g vercel
+  vercel login          (uses your email)
+
+Deploy:
+  cd path/to/skdla-vercel-deploy
+  vercel --prod         (it will ask which project — pick "skdla")
+
+That's it. The first time, Vercel asks a few questions:
+  - Set up and deploy? Y
+  - Scope? choose your account
+  - Link to existing project? Y
+  - Project name? skdla   (must match the one mapped to skdla.vercel.app)
+  - In which directory is your code located? ./
+  - Want to override settings? N
+
+------------------------------------------------------------------
+OPTION C — GITHUB AUTO-DEPLOY (set up once, deploy on push)
+------------------------------------------------------------------
+1. Create a new repo on GitHub (e.g. "skdla-board"), upload these files
+2. In Vercel dashboard → skdla project → Settings → Git → Connect to that repo
+3. Every push to main = auto-deploy
+
+------------------------------------------------------------------
+WHAT IF THE 404 STAYS AFTER DEPLOY?
+------------------------------------------------------------------
+- Confirm the deployment actually attached to the "skdla" project (not a new one)
+- In Vercel: Settings → Domains → make sure skdla.vercel.app is assigned to this project
+- Hard refresh the page (Ctrl+Shift+R) — browsers cache 404s
+
+------------------------------------------------------------------
+ABOUT THE PUBLISHABLE KEY IN index.html
+------------------------------------------------------------------
+The file embeds your Supabase publishable (anon) key — this is by design,
+publishable keys are safe to expose. They only allow what RLS lets through.
+The board's Supabase tables already have read/write policies scoped to anon.
+
+Do NOT replace this with a service-role key. Service-role bypasses RLS and
+exposing it on a public site would be a serious security hole.
